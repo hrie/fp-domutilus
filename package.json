@@ -1,0 +1,24 @@
+{
+  "name": "fp-domutilus",
+  "version": "1.0.0",
+  "description": "Tiny fp-wrapper above document.createElement",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hrie/fp-domutilus.git"
+  },
+  "keywords": [
+    "dom",
+    "fp"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "author": "h.rie <rie@pm.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hrie/fp-domutilus/issues"
+  },
+  "homepage": "https://github.com/hrie/fp-domutilus#readme"
+}
