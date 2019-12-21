@@ -18,21 +18,31 @@ $ yarn add fp-domutilus
 
 ## API
 
-### [createElement](index.js#)
+### Functions list
+* [createElement](#createelement)
+* [createText](#createtext)
+* [appendTo](#appendto)
+* [appendToBody](#appendtobody)
+* [elemById](#elembyid)
+* [elemByClass](#elembyclass)
+* [remove](#remove)
+* [compose](#compose)
+
+### [createElement](#createelement)
 
 Curried function to create a HTMLElement.
 
 **Params**
-
 * `tagName` **{string}**: elements tag name.
 * `className` **{string}**: elements class name.
 * `attrs` **{Object}**: attributes to set on element. Except common there are 3 special attributes: *text*, *html*, *on*.
-* `returns` **{HTMLElement}**
+
+**Returns** **{HTMLElement}**
 
 **Example**
 
 ```js
-const { createElement } = require('fp-domutilus');
+import { createElement } from 'fp-domutilus';
 
 // usage of common attributes
 createElement('h1', '', { title: 'Main text', data: { id: 4 } });
@@ -48,30 +58,36 @@ createElement('h1', '', { html: 'Main header <small>small header</small>' });
 
 // special attribute "on" adds event listener to element
 createElement('input', '', { 
-	placeholder: 'Click me', 
-	on: { 
-		focus: ({ target }) => target.value='then type something',
-		input: ({ target }) => target.value=Date.now()
-	} 
+    placeholder: 'Click me', 
+    on: { 
+        focus: ({ target }) => target.value='then type something',
+        input: ({ target }) => target.value=Date.now()
+    } 
 });
 //=> <input placeholder="Click me" />
 ```
 
 ```js
-const { createElement } = require('fp-domutilus');
+import { createElement } from 'fp-domutilus';
 
 // function is curried, so you can do things like this:
 const li = createElement('li');
 const middleLi = li('middle');
 
 const children = [
-	li('first', { text: 1 }), 
-	middleLi({ text: 2 }), 
-	middleLi({ text: 3 }), 
-	middleLi({ text: 4 }), 
-	li('last', { text: 5 })
+    li('first', { text: 1 }), 
+    middleLi({ text: 2 }), 
+    middleLi({ text: 3 }), 
+    middleLi({ text: 4 }), 
+    li('last', { text: 5 })
 ];
-//=> <li class="first">1</li><li class="middle">2</li><li class="middle">3</li><li class="middle">4</li><li class="last">5</li>
+/* =>
+    <li class="first">1</li>
+    <li class="middle">2</li>
+    <li class="middle">3</li>
+    <li class="middle">4</li>
+    <li class="last">5</li>
+*/
 
 // because of curry you must fill-in all arguments. This will not work as expected if you just want to create a HTMLDivElement:
 const divElement = createElement('div');
@@ -81,25 +97,26 @@ const divElement = createElement('div');
 const divElement = createElement('div', '', {});
 ```
 
-### [createText](index.js#)
+### [createText](#createtext)
 
 Create a textNode.
 
 **Params**
 
 * `text` **{string}**: text.
-* `returns` **{Text}**
+
+**Returns** **{Text}**
 
 **Example**
 
 ```js
-const { createElement, createText } = require('fp-domutilus');
+import { createElement, createText } from 'fp-domutilus';
 
 const text = createText('Some text');
 //=> #text "Some text"
 ```
 
-### [appendTo](index.js#)
+### [appendTo](#appendto)
 
 Curried function to append element (array of elements) to some other element.
 
@@ -107,62 +124,77 @@ Curried function to append element (array of elements) to some other element.
 
 * `to` **{HTMLElement}**: parent element.
 * `children` **{[HTMLElement]}**: elements to append.
-* `returns` **{HTMLElement}**: returns parent element.
+
+**Returns** **{HTMLElement}** parent element
 
 **Example**
 
 ```js
-const { createElement, appendTo } = require('fp-domutilus');
+import { createElement, appendTo } from 'fp-domutilus';
 
 const li = createElement('li', '');
 
 const list = appendTo(
-	createElement('ul', '', {}),
-	[ li({ text: 'Element 1' }), li({ text: 'Element 2' }), li({ text: 'Element 3' }) ]
+    createElement('ul', '', {}),
+    [ li({ text: 'Element 1' }), li({ text: 'Element 2' }), li({ text: 'Element 3' }) ]
 );
-//=> <ul><li>Element 1</li><li>Element 2</li><li>Element 3</li></ul>
+/* => 
+    <ul>
+        <li>Element 1</li>
+        <li>Element 2</li>
+        <li>Element 3</li>
+    </ul>
+*/
 ```
 
-### [appendToBody](index.js#)
+### [appendToBody](#appendtobody)
 
 Append element (array of elements) to **body** after check if body exists.
 
 **Params**
 
 * `elem` **{[HTMLElement]}**: elements to append.
-* `returns` **{void}**
+
+**Returns** **{void}**
 
 **Example**
 
 ```js
-const { appendToBody } = require('fp-domutilus');
+import { appendToBody } from 'fp-domutilus';
 
 appendToBody(
-	createElement('script', '', { src: '/script.js', async: true })
+    createElement('script', '', { src: '/script.js', async: true })
 );
-//=> <body>...<script src="/script.js" async="true></script></body>
+/* =>
+    <body>
+        ...
+        <script src="/script.js" async="true></script>
+    </body>
+*/
 ```
 
-### [elemById](index.js#)
+### [elemById](#elembyid)
 
 Wrapper above document.getElementById. Searches for element that matches ID-selector. If match fails returns empty **div**.
 
 **Params**
 
 * `selector` **{string}**: any valid ID-selector.
-* `returns` **{HTMLElement}**
+
+**Returns** **{HTMLElement}**
 
 **Example**
 
 ```js
-const { elemById } = require('fp-domutilus');
+import { elemById } from 'fp-domutilus';
 
 elemById('some-id').classList.add('show');
 //=> <div id="some-id" class="show">text</div>
-// or <div class="show"></div>
+// or
+//=> <div class="show"></div>
 ```
 
-### [elemByClass](index.js#)
+### [elemByClass](#elembyclass)
 
 Wrapper above querySelector. Searches for element that matches selector. If match fails returns empty **div**.
 
@@ -170,60 +202,71 @@ Wrapper above querySelector. Searches for element that matches selector. If matc
 
 * `selector` **{string}**: any valid selector: .class-selector or [href="/index"] etc.
 * `[parent]` **{HTMLElement}**: where to search (default: document).
-* `returns` **{HTMLElement}**
+
+**Returns** **{HTMLElement}**
 
 **Example**
 
 ```js
-const { elemByClass } = require('fp-domutilus');
+import { elemByClass } from 'fp-domutilus';
 
 elemByClass('.some-class').classList.add('show');
 //=> <div class="some-class show">text</div>
-// or <div class="show"></div>
+// or 
+//=> <div class="show"></div>
 ```
 
-### [remove](index.js#)
+### [remove](#remove)
 
 Removes element.
 
 **Params**
 
 * `selector` **{HTMLElement}**: element to remove.
-* `returns` **{void}**
+
+**Returns** **{HTMLElement}**
 
 **Example**
 
 ```js
-const { remove, elemByClass } = require('fp-domutilus');
+import { remove, elemByClass } from 'fp-domutilus';
 
 remove(elemByClass('.some-class'));
 ```
 
-### [compose](index.js#)
+### [compose](#compose)
 
 Performs right-to-left function composition.
 
 **Params**
 
 * `fns` **{...Function}**: functions to compose.
-* `returns` **{Function}**
+
+**Returns** **{Function}**
 
 **Example**
 
 ```js
-const { compose, createElement, createText, appendTo, appendToBody } = require('fp-domutilus');
+import { compose, createElement, createText, appendTo, appendToBody } from 'fp-domutilus';
 
 compose(
-	appendToBody,
-	appendTo(createElement('div', 'wrapper', {})),
-	appendTo(createElement('h1', '', {})),
-	() => [
-		createText('Main header'),
-		createElement('small', '', { text: 'Small header' }),
-	]
+    appendToBody,
+    appendTo(createElement('div', 'wrapper', {})),
+    appendTo(createElement('h1', '', {})),
+    () => [
+        createText('Main header'),
+        createElement('small', '', { text: 'Small header' }),
+    ]
 )();
 
-//=> <body>...<div class="wrapper"><h1>Main header <small>Small header</small></h1></div></body>
+/* => 
+    <body>
+        ...
+        <div class="wrapper">
+            <h1>Main header <small>Small header</small></h1>
+        </div>
+    </body>
+*/
 ```
 
 ### License
